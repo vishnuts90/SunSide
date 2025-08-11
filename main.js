@@ -1,4 +1,5 @@
 let currentHeading = 0;
+let locationTimeout;
 
 function updateSunPosition(latitude, longitude, heading) {
     const sunPosition = SunCalc.getPosition(new Date(), latitude, longitude);
@@ -26,32 +27,39 @@ function updateSunPosition(latitude, longitude, heading) {
 }
 
 function getCurrentLocation() {
-    if (navigator.geolocation) {
-        document.getElementById("loading").innerText = "Getting your location...";
-
-        navigator.geolocation.watchPosition(
-            function(position) {
-                console.log("Location obtained:", position.coords);
-                const { latitude, longitude } = position.coords;
-
-                // Show city/country name
-                getLocationName(latitude, longitude);
-
-                getWeather(latitude, longitude);
-                initCompass(latitude, longitude);
-                document.getElementById("loading").style.display = "none";
-            },
-            function(error) {
-                console.error("Location error:", error);
-                showError("Unable to get location. Please check settings and permissions.");
-                document.getElementById("locationDisplay").innerText = "Location not available";
-            },
-            { enableHighAccuracy: true, timeout: 8000 }
-        );
-    } else {
+    if (!navigator.geolocation) {
         showError("Geolocation not supported by this browser.");
         document.getElementById("locationDisplay").innerText = "Location not supported";
+        return;
     }
+
+    document.getElementById("loading").innerText = "Getting your location...";
+    
+    // Timeout after 8 seconds if no location
+    locationTimeout = setTimeout(() => {
+        showError("Unable to get location. Please check permissions.");
+        document.getElementById("locationDisplay").innerText = "Location not available";
+    }, 8000);
+
+    navigator.geolocation.watchPosition(
+        function (position) {
+            clearTimeout(locationTimeout); // cancel timeout if location arrives
+            console.log("Location obtained:", position.coords);
+            const { latitude, longitude } = position.coords;
+
+            getLocationName(latitude, longitude);
+            getWeather(latitude, longitude);
+            initCompass(latitude, longitude);
+            document.getElementById("loading").style.display = "none";
+        },
+        function (error) {
+            clearTimeout(locationTimeout);
+            console.error("Location error:", error);
+            showError("Unable to get location. Please check settings and permissions.");
+            document.getElementById("locationDisplay").innerText = "Location not available";
+        },
+        { enableHighAccuracy: true, timeout: 8000 }
+    );
 }
 
 function getLocationName(lat, lon) {
@@ -132,11 +140,13 @@ function showError(message) {
     document.getElementById("loading").style.display = "none";
 }
 
-// Help button toggle
-document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("helpButton").addEventListener("click", function() {
+// Always attach help button immediately
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("helpButton").addEventListener("click", function () {
         const helpText = document.getElementById("helpText");
         helpText.style.display = helpText.style.display === "block" ? "none" : "block";
     });
+
+    // Start getting location after button is ready
     getCurrentLocation();
 });
