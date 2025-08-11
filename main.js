@@ -1,12 +1,5 @@
 let currentHeading = 0;
 
-// Read mock location from HTML inputs
-function getMockLocation() {
-    const lat = parseFloat(document.getElementById("mockLat").value) || 40.7128;
-    const lon = parseFloat(document.getElementById("mockLon").value) || -74.0060;
-    return { lat, lon };
-}
-
 function updateSunPosition(latitude, longitude, heading) {
     const sunPosition = SunCalc.getPosition(new Date(), latitude, longitude);
     const sunAzimuth = sunPosition.azimuth * 180 / Math.PI;
@@ -40,27 +33,39 @@ function getCurrentLocation() {
             function(position) {
                 console.log("Location obtained:", position.coords);
                 const { latitude, longitude } = position.coords;
+
+                // Show city/country name
+                getLocationName(latitude, longitude);
+
                 getWeather(latitude, longitude);
                 initCompass(latitude, longitude);
                 document.getElementById("loading").style.display = "none";
             },
             function(error) {
-                console.warn("Location error, using mock location:", error);
-                showError("Using mock location for demo.");
-                const { lat, lon } = getMockLocation();
-                getWeather(lat, lon);
-                initCompass(lat, lon);
-                document.getElementById("loading").style.display = "none";
+                console.error("Location error:", error);
+                showError("Unable to get location. Please check settings and permissions.");
+                document.getElementById("locationDisplay").innerText = "Location not available";
             },
             { enableHighAccuracy: true, timeout: 8000 }
         );
     } else {
-        console.warn("Geolocation not supported, using mock location.");
-        showError("Geolocation not supported — using mock location.");
-        const { lat, lon } = getMockLocation();
-        getWeather(lat, lon);
-        initCompass(lat, lon);
+        showError("Geolocation not supported by this browser.");
+        document.getElementById("locationDisplay").innerText = "Location not supported";
     }
+}
+
+function getLocationName(lat, lon) {
+    const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            const city = data.address.city || data.address.town || data.address.village || "Unknown place";
+            const country = data.address.country || "";
+            document.getElementById("locationDisplay").innerText = `${city}, ${country}`;
+        })
+        .catch(() => {
+            document.getElementById("locationDisplay").innerText = "Location found, name unavailable";
+        });
 }
 
 function initCompass(latitude, longitude) {
@@ -70,7 +75,7 @@ function initCompass(latitude, longitude) {
                 if (permissionState === 'granted') {
                     startCompass(latitude, longitude);
                 } else {
-                    console.warn("Compass permission denied, defaulting heading to 0.");
+                    console.warn("Compass permission denied.");
                     showError("Compass permission denied — default heading used.");
                     currentHeading = 0;
                     updateSunPosition(latitude, longitude, currentHeading);
@@ -127,6 +132,11 @@ function showError(message) {
     document.getElementById("loading").style.display = "none";
 }
 
-window.onload = function() {
+// Help button toggle
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("helpButton").addEventListener("click", function() {
+        const helpText = document.getElementById("helpText");
+        helpText.style.display = helpText.style.display === "block" ? "none" : "block";
+    });
     getCurrentLocation();
-};
+});
