@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://unpkg.com/suncalc@1.9.0/suncalc.js"></script>
     <style>
+        /* (your existing CSS unchanged) */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -15,171 +16,11 @@
             color: white;
             height: 100vh;
         }
-        
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .card {
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .sun-position {
-            text-align: center;
-        }
-        
-        .vehicle-container {
-            position: relative;
-            width: 200px;
-            height: 300px;
-            margin: 20px auto;
-        }
-        
-        .vehicle {
-            width: 100%;
-            height: 100%;
-            background-color: #ddd;
-            border-radius: 20px;
-            position: relative;
-        }
-        
-        .sun-indicator {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background-color: #ffeb3b;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 0 20px #ffeb3b;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        
-        .sun-left { left: -60px; top: 125px; }
-        .sun-right { right: -60px; top: 125px; }
-        .sun-front { top: -60px; left: 75px; }
-        .sun-back { bottom: -60px; left: 75px; }
-        
-        .weather {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            text-align: center;
-        }
-        
-        .weather-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .weather-icon {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-        
-        .weather-value {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        
-        .weather-label {
-            font-size: 14px;
-            opacity: 0.8;
-        }
-        
-        .compass {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .compass-value {
-            font-size: 24px;
-            font-weight: bold;
-        }
-        
-        .loading {
-            text-align: center;
-            font-size: 18px;
-            margin-top: 20px;
-        }
-        
-        .error {
-            color: #ff6b6b;
-            text-align: center;
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Vehicle Sun Position</h1>
-        
-        <div class="card">
-            <div class="sun-position">
-                <h2>Sun is on your:</h2>
-                <div id="sunPositionText" style="font-size: 32px; font-weight: bold;">Loading...</div>
-                
-                <div class="vehicle-container">
-                    <div class="vehicle"></div>
-                    <div id="sunIndicator" class="sun-indicator" style="display: none;">
-                        <i class="fas fa-sun"></i>
-                    </div>
-                </div>
-                
-                <div class="compass">
-                    <div>Vehicle heading:</div>
-                    <div id="compassValue" class="compass-value">--°</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="card">
-            <h2>Current Weather</h2>
-            <div id="weatherContainer" class="weather">
-                <div class="weather-item">
-                    <div class="weather-icon"><i class="fas fa-temperature-high"></i></div>
-                    <div id="temperature" class="weather-value">--°C</div>
-                    <div class="weather-label">Temperature</div>
-                </div>
-                <div class="weather-item">
-                    <div class="weather-icon"><i class="fas fa-cloud"></i></div>
-                    <div id="conditions" class="weather-value">--</div>
-                    <div class="weather-label">Conditions</div>
-                </div>
-                <div class="weather-item">
-                    <div class="weather-icon"><i class="fas fa-wind"></i></div>
-                    <div id="wind" class="weather-value">-- km/h</div>
-                    <div class="weather-label">Wind</div>
-                </div>
-            </div>
-        </div>
-        
-        <div id="loading" class="loading">Getting your location...</div>
-        <div id="error" class="error" style="display: none;"></div>
-    </div>
-
-    <script>
-        // Main JavaScript will go here
-    </script>
-</body>
-</html>
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .card { background-color: rgba(255, 255, 255, 0.2); border-radius: 15px; padding: 20px; margin-bottom: 20px; }
+        h1 { text-align: center; margin-bottom: 30px; }
+        .sun-position { text-align: center; }
+        .vehicle-container { position: relative; width: 200px; height: 300px; margin: 20px auto; }
+        .vehicle { width: 100%; height: 100%; background-color: #ddd; border-radius: 20px; position: relative; }
+        .sun-indicator { position: absolute; width: 50px; height: 50px; background-color: #ffeb3b; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 0 20px #ffeb3b; animation: pulse 2s infinite; }
+        @keyf
