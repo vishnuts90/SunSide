@@ -1,10 +1,11 @@
 let currentHeading = 0;
-let watchId;
-let locationId;
 
-// Mock location (New York City)
-const MOCK_LAT = 40.7128;
-const MOCK_LON = -74.0060;
+// Read mock location from HTML inputs
+function getMockLocation() {
+    const lat = parseFloat(document.getElementById("mockLat").value) || 40.7128;
+    const lon = parseFloat(document.getElementById("mockLon").value) || -74.0060;
+    return { lat, lon };
+}
 
 function updateSunPosition(latitude, longitude, heading) {
     const sunPosition = SunCalc.getPosition(new Date(), latitude, longitude);
@@ -14,17 +15,13 @@ function updateSunPosition(latitude, longitude, heading) {
 
     let sunSide, sunClass;
     if (relativeSunPosition > 315 || relativeSunPosition <= 45) {
-        sunSide = "FRONT";
-        sunClass = "sun-front";
+        sunSide = "FRONT"; sunClass = "sun-front";
     } else if (relativeSunPosition > 45 && relativeSunPosition <= 135) {
-        sunSide = "RIGHT";
-        sunClass = "sun-right";
+        sunSide = "RIGHT"; sunClass = "sun-right";
     } else if (relativeSunPosition > 135 && relativeSunPosition <= 225) {
-        sunSide = "BACK";
-        sunClass = "sun-back";
+        sunSide = "BACK"; sunClass = "sun-back";
     } else {
-        sunSide = "LEFT";
-        sunClass = "sun-left";
+        sunSide = "LEFT"; sunClass = "sun-left";
     }
 
     document.getElementById("sunPositionText").innerText = sunSide;
@@ -39,23 +36,20 @@ function getCurrentLocation() {
     if (navigator.geolocation) {
         document.getElementById("loading").innerText = "Getting your location...";
 
-        locationId = navigator.geolocation.watchPosition(
+        navigator.geolocation.watchPosition(
             function(position) {
                 console.log("Location obtained:", position.coords);
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-
+                const { latitude, longitude } = position.coords;
                 getWeather(latitude, longitude);
                 initCompass(latitude, longitude);
-
                 document.getElementById("loading").style.display = "none";
             },
             function(error) {
                 console.warn("Location error, using mock location:", error);
                 showError("Using mock location for demo.");
-                // Fallback to mock location
-                getWeather(MOCK_LAT, MOCK_LON);
-                initCompass(MOCK_LAT, MOCK_LON);
+                const { lat, lon } = getMockLocation();
+                getWeather(lat, lon);
+                initCompass(lat, lon);
                 document.getElementById("loading").style.display = "none";
             },
             { enableHighAccuracy: true, timeout: 8000 }
@@ -63,8 +57,9 @@ function getCurrentLocation() {
     } else {
         console.warn("Geolocation not supported, using mock location.");
         showError("Geolocation not supported — using mock location.");
-        getWeather(MOCK_LAT, MOCK_LON);
-        initCompass(MOCK_LAT, MOCK_LON);
+        const { lat, lon } = getMockLocation();
+        getWeather(lat, lon);
+        initCompass(lat, lon);
     }
 }
 
