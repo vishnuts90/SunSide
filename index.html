@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://unpkg.com/suncalc@1.9.0/suncalc.js"></script>
     <style>
-        /* existing CSS unchanged */
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: linear-gradient(135deg, #72b1e3, #4b79cf); color: white; height: 100vh; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
         .card { background-color: rgba(255, 255, 255, 0.2); border-radius: 15px; padding: 20px; margin-bottom: 20px; }
@@ -30,13 +29,16 @@
         .compass-value { font-size: 24px; font-weight: bold; }
         .loading { text-align: center; font-size: 18px; margin-top: 20px; }
         .error { color: #ff6b6b; text-align: center; margin-top: 20px; }
-        .mock-location { text-align: center; margin-top: 15px; }
-        .mock-location input { width: 100px; padding: 5px; margin: 5px; border-radius: 5px; border: none; text-align: center; }
+        #locationDisplay { text-align: center; font-size: 16px; margin-top: 10px; opacity: 0.9; }
+        #helpButton { display: block; margin: 15px auto; padding: 10px 15px; background: white; color: #333; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        #helpText { display: none; font-size: 14px; margin-top: 10px; padding: 10px; background: rgba(255,255,255,0.15); border-radius: 10px; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Vehicle Sun Position</h1>
+
+        <div id="locationDisplay">Detecting location...</div>
 
         <div class="card">
             <div class="sun-position">
@@ -81,10 +83,15 @@
         <div id="loading" class="loading">Getting your location...</div>
         <div id="error" class="error" style="display: none;"></div>
 
-        <!-- Mock Location Inputs -->
-        <div class="mock-location">
-            <label>Mock Lat: <input type="number" id="mockLat" step="0.0001" value="40.7128"></label>
-            <label>Mock Lon: <input type="number" id="mockLon" step="0.0001" value="-74.0060"></label>
+        <button id="helpButton">Help</button>
+        <div id="helpText">
+            <ul>
+                <li>Ensure you have granted location permissions to this site.</li>
+                <li>Turn on GPS or Location Services on your device.</li>
+                <li>If using a browser, check Site Settings → Location → Allow.</li>
+                <li>Some desktops/laptops may not have accurate GPS.</li>
+                <li>If denied once, you may need to reset permissions.</li>
+            </ul>
         </div>
     </div>
 
